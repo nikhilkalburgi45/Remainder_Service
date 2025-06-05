@@ -20,13 +20,15 @@ const fetchPendingEmails = async () => {
   try {
     const repository = new TicketRepository();
     const currentTime = new Date();
-    const response = await repository.get({ 
+    const response = await repository.get({
       status: "PENDING",
       notificationTime: {
-        [Op.lte]: currentTime
-      }
+        [Op.lte]: currentTime,
+      },
     });
-    console.log(`Found ${response.length} pending emails at ${currentTime.toISOString()}`);
+    console.log(
+      `Found ${response.length} pending emails at ${currentTime.toISOString()}`
+    );
     return response;
   } catch (error) {
     console.log("Error in fetchPendingEmails:", error);
@@ -51,7 +53,11 @@ const updateTicket = async (ticketId, status) => {
     return response;
   } catch (error) {
     console.log(error);
-  } 
+  }
+};
+
+const testingQueue = async (data) => {
+  console.log("Inside Service Layer", data);
 };
 
 module.exports = {
@@ -59,4 +65,5 @@ module.exports = {
   fetchPendingEmails,
   createNotification,
   updateTicket,
+  testingQueue,
 };
