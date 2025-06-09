@@ -56,8 +56,45 @@ const updateTicket = async (ticketId, status) => {
   }
 };
 
+const subscribeEvents = async (payload) => {
+  try {
+    console.log("Triggered the email service event");
+    const service = payload.service;
+    const data = payload.data;
+
+    switch (service) {
+      case "CREATE_TICKET":
+        await createNotification(data);
+        break;
+      case "SEND_BASIC_MAIL":
+        await sendBasicEmail(data);
+        break;
+      default:
+        console.log("No valid event received");
+        break;
+    }
+  } catch (error) {
+    console.log("Error in subscribeEvents:", error);
+  }
+};
+
 const testingQueue = async (data) => {
-  console.log("Inside Service Layer", data);
+  try {
+    const message = JSON.parse(data);
+    console.log("Inside service layer", message);
+
+    // Extract the service type and data from the nested structure
+    const service = message.service;
+    const ticketData = message.data;
+
+    if (service === "CREATE_TICKET") {
+      // Create notification with the ticket data
+      await createNotification(ticketData);
+      console.log("Ticket created successfully");
+    }
+  } catch (error) {
+    console.error("Error processing queue message:", error);
+  }
 };
 
 module.exports = {
@@ -65,5 +102,6 @@ module.exports = {
   fetchPendingEmails,
   createNotification,
   updateTicket,
+  subscribeEvents,
   testingQueue,
 };
