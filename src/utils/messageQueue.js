@@ -82,9 +82,10 @@ const subscribeMessage = async (channel, service, binding_key) => {
       console.log("📥 Received data from queue:");
       console.log(msg.content.toString());
 
-      service(JSON.parse(msg.content.toString()));
+      const payload = JSON.parse(msg.content.toString());
 
-      // Manually acknowledge
+      service(payload);
+
       channel.ack(msg);
     });
   } catch (error) {
