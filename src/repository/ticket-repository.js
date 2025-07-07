@@ -27,25 +27,25 @@ class TicketRepository {
   async get(filter) {
     try {
       const whereClause = {
-        status: filter.status
+        status: filter.status,
       };
-      
+
       if (filter.notificationTime) {
         // Convert the notification time to UTC for comparison
         const currentTime = new Date();
         whereClause.notificationTime = {
-          [Op.lte]: currentTime
+          [Op.lte]: currentTime,
         };
       }
 
-      console.log('Searching for tickets with where clause:', whereClause);
+      console.log("Searching for tickets with where clause:", whereClause);
       const ticket = await this.NotificationTicket.findAll({
-        where: whereClause
+        where: whereClause,
       });
-      console.log('Found tickets:', ticket.length);
+      console.log("Found tickets:", ticket.length);
       return ticket;
     } catch (error) {
-      console.error('Error in get method:', error);
+      console.error("Error in get method:", error);
       throw error;
     }
   }
@@ -54,7 +54,7 @@ class TicketRepository {
     try {
       const ticket = await this.NotificationTicket.findByPk(ticketId);
       if (!ticket) {
-        throw new Error('Ticket not found');
+        throw new Error("Ticket not found");
       }
       ticket.status = status.status || status;
       await ticket.save();
